@@ -35,12 +35,10 @@ func pythonModulo(i int16) int16 {
 	return modulo - -i&mask
 }
 
-func PlainToCoord(i int64) *types.MapBlockCoords {
+func PlainToCoord(x int64, y int64, z int64) *types.MapBlockCoords {
 	c := types.MapBlockCoords{}
-	c.X = unsignedToSigned(pythonModulo(int16(i)))
-	i = (i - int64(c.X)) >> numBitsPerComponent
-	c.Y = unsignedToSigned(pythonModulo(int16(i)))
-	i = (i - int64(c.Y)) >> numBitsPerComponent
-	c.Z = unsignedToSigned(pythonModulo(int16(i)))
+	c.X = x
+	c.Y = y
+	c.Z = z
 	return &c
 }

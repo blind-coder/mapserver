@@ -1,7 +1,7 @@
 package sqlite
 
 const getBlocksByMtimeQuery = `
-select pos,data,mtime
+select x,y,z,data,mtime
 from blocks b
 where b.mtime > ?
 order by b.mtime asc
@@ -13,7 +13,7 @@ select count(*) from blocks b
 `
 
 const getBlockQuery = `
-select pos,data,mtime from blocks b where b.pos = ?
+select x,y,z,data,mtime from blocks b where b.pos = ?
 `
 
 const getTimestampQuery = `

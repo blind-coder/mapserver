@@ -14,7 +14,7 @@ const (
 )
 
 const getLastBlockQuery = `
-select pos,data,mtime
+select x,y,z,data,mtime
 from blocks b
 where b.pos > ?
 order by b.pos asc, b.mtime asc
@@ -51,11 +51,13 @@ func (a *Sqlite3Accessor) FindNextInitialBlocks(s settings.Settings, layers []*t
 		result.HasMore = true
 		result.UnfilteredCount++
 
-		var pos int64
+		var x int64
+		var y int64
+		var z int64
 		var data []byte
 		var mtime int64
 
-		err = rows.Scan(&pos, &data, &mtime)
+		err = rows.Scan(&x, &y, &z, &data, &mtime)
 		if err != nil {
 			return nil, err
 		}
@@ -65,6 +67,7 @@ func (a *Sqlite3Accessor) FindNextInitialBlocks(s settings.Settings, layers []*t
 		}
 
 		mb := convertRows(pos, data, mtime)
+		mb := convertRows(x, y, z, data, mtime)
 
 		// new position
 		lastpos = pos

@@ -65,8 +65,8 @@ func (db *Sqlite3Accessor) Migrate() error {
 	return nil
 }
 
-func convertRows(pos int64, data []byte, mtime int64) *db.Block {
-	c := coords.PlainToCoord(pos)
+func convertRows(x int64, y int64, z int64, data []byte, mtime int64) *db.Block {
+	c := coords.PlainToCoord(x, y, z)
 	return &db.Block{Pos: c, Data: data, Mtime: mtime}
 }
 
@@ -81,16 +81,18 @@ func (a *Sqlite3Accessor) FindBlocksByMtime(gtmtime int64, limit int) ([]*db.Blo
 	defer rows.Close()
 
 	for rows.Next() {
-		var pos int64
+		var x int64
+		var y int64
+		var z int64
 		var data []byte
 		var mtime int64
 
-		err = rows.Scan(&pos, &data, &mtime)
+		err = rows.Scan(&x, &y, &z, &data, &mtime)
 		if err != nil {
 			return nil, err
 		}
 
-		mb := convertRows(pos, data, mtime)
+		mb := convertRows(x, y, z, data, mtime)
 		blocks = append(blocks, mb)
 	}
 
@@ -152,16 +154,18 @@ func (db *Sqlite3Accessor) GetBlock(pos *types.MapBlockCoords) (*db.Block, error
 	defer rows.Close()
 
 	if rows.Next() {
-		var pos int64
+		var x int64
+		var y int64
+		var z int64
 		var data []byte
 		var mtime int64
 
-		err = rows.Scan(&pos, &data, &mtime)
+		err = rows.Scan(&x, &y, &z, &data, &mtime)
 		if err != nil {
 			return nil, err
 		}
 
-		mb := convertRows(pos, data, mtime)
+		mb := convertRows(x, y, z, data, mtime)
 		return mb, nil
 	}
 
