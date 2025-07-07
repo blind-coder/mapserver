@@ -65,7 +65,7 @@ func (db *Sqlite3Accessor) Migrate() error {
 	return nil
 }
 
-func convertRows(x int64, y int64, z int64, data []byte, mtime int64) *db.Block {
+func convertRows(x int, y int, z int, data []byte, mtime int64) *db.Block {
 	c := coords.PlainToCoord(x, y, z)
 	return &db.Block{Pos: c, Data: data, Mtime: mtime}
 }
@@ -81,9 +81,9 @@ func (a *Sqlite3Accessor) FindBlocksByMtime(gtmtime int64, limit int) ([]*db.Blo
 	defer rows.Close()
 
 	for rows.Next() {
-		var x int64
-		var y int64
-		var z int64
+		var x int
+		var y int
+		var z int
 		var data []byte
 		var mtime int64
 
@@ -144,9 +144,7 @@ func (db *Sqlite3Accessor) GetTimestamp() (int64, error) {
 }
 
 func (db *Sqlite3Accessor) GetBlock(pos *types.MapBlockCoords) (*db.Block, error) {
-	ppos := coords.CoordToPlain(pos)
-
-	rows, err := db.db.Query(getBlockQuery, ppos)
+	rows, err := db.db.Query(getBlockQuery, pos.X, pos.Y, pos.Z)
 	if err != nil {
 		return nil, err
 	}
@@ -154,9 +152,9 @@ func (db *Sqlite3Accessor) GetBlock(pos *types.MapBlockCoords) (*db.Block, error
 	defer rows.Close()
 
 	if rows.Next() {
-		var x int64
-		var y int64
-		var z int64
+		var x int
+		var y int
+		var z int
 		var data []byte
 		var mtime int64
 

@@ -35,7 +35,7 @@ func pythonModulo(i int16) int16 {
 	return modulo - -i&mask
 }
 
-func PlainToCoord(x int64, y int64, z int64) *types.MapBlockCoords {
+func PlainToCoord(x int, y int, z int) *types.MapBlockCoords {
 	c := types.MapBlockCoords{}
 	c.X = x
 	c.Y = y
